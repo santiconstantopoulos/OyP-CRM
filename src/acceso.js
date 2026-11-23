@@ -4,7 +4,7 @@ const attemptWindow = 10 * 60;
 const encoder = new TextEncoder();
 const privateHeaders = {
   "Cache-Control": "private, no-store",
-  "Referrer-Policy": "no-referrer",
+  "Referrer-Policy": "same-origin",
   "X-Content-Type-Options": "nosniff",
   "X-Robots-Tag": "noindex, nofollow",
 };
@@ -124,7 +124,7 @@ export async function guardAccess(request, db, record) {
   }
   if (path === "/ingresar" && request.method === "POST") {
     if (!sameOrigin(request, url))
-      return new Response(null, { status: 403, headers: privateHeaders });
+      return loginPage("/", "No pudimos verificar el envío. Volvé a ingresar desde este formulario.", 403);
     if (
       !request.headers
         .get("Content-Type")

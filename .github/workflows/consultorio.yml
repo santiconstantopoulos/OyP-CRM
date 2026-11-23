@@ -32,6 +32,9 @@ jobs:
       - name: Compilar la aplicación
         run: npm run build
 
+      - name: Verificar ingreso y cierre de sesión en Chrome
+        run: npm run test:navegador
+
       - name: Empaquetar el proyecto Node.js
         run: git archive --format=zip --prefix=oyp-consultorio/ --output="$RUNNER_TEMP/oyp-consultorio.zip" HEAD
 

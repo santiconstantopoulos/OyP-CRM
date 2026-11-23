@@ -25,7 +25,7 @@ export default {
       "Content-Type": item.type,
       "Cache-Control": "private, no-store",
       "X-Content-Type-Options": "nosniff",
-      "Referrer-Policy": "no-referrer",
+      "Referrer-Policy": "same-origin",
       "X-Robots-Tag": "noindex, nofollow",
     };
     if (item.filename)
