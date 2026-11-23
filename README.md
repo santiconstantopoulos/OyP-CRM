@@ -44,8 +44,11 @@ Para llevarte el prototipo navegable en un único archivo podés ejecutar `node 
 ## Verificación
 
 ```sh
+npm ci
 npm test
 ```
+
+Solo las pruebas de interfaz requieren instalar dependencias de desarrollo. Para iniciar el CRM alcanza con Node.js.
 
 Las pruebas crean contactos ficticios y bases temporales. Cubren alta mínima y repetida, validaciones sin escritura parcial, $80.000 con seña de $30.000, avance por etapas, lectura sin cobro, doble entrega, saldo cero, señas completas, recompra, vencimiento y reprogramación con medianoche argentina, cierre sin venta y persistencia.
 
