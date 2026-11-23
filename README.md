@@ -60,6 +60,16 @@ Para una copia local consistente, detené el proceso antes de copiar la carpeta 
 
 ## Publicación en Sites
 
-`npm run build` prepara el Worker en `dist/server/index.js`, su manifiesto y la migración en `dist/drizzle`. La versión alojada usa el mismo código de validación y SQL con la base D1 de Sites. Configurá el binding `DB` y aplicá `drizzle/0000_consultorio.sql` una vez en una base vacía mediante el proceso de migraciones del alojamiento. Mantené el sitio con acceso exclusivo del titular. El Worker verifica la identidad entregada por Sites en cada solicitud. La raíz abre el CRM, `/prototipo` permite practicar con ejemplos, `/guia` abre estas instrucciones y `/proyecto.zip` descarga el código.
+El enlace web abre el ingreso con la contraseña compartida del consultorio. Cada persona que la conoce puede registrar consultas, señas, encargos, entregas y cobros. El pie de página permite cerrar la sesión del dispositivo. Las sesiones vencen a las 12 horas y el servidor limita los intentos de ingreso.
+
+`npm run build` prepara el Worker, el manifiesto y las migraciones de D1. Configurá el binding `DB` y el secreto `CRM_PASSWORD_HASH` en el alojamiento. El valor tiene el formato `salHex.verificadorHex`: sal aleatoria de 16 bytes y 32 bytes derivados con PBKDF2-SHA256 (100.000 iteraciones, contraseña en UTF-8). Para generar un verificador local a partir de la contraseña definida en tu `.env`, ejecutá:
+
+```sh
+node --env-file=.env --input-type=module -e "import {randomBytes,pbkdf2Sync} from 'node:crypto';const s=randomBytes(16);if(!process.env.CRM_PASSWORD)throw Error('Definí CRM_PASSWORD');console.log(s.toString('hex')+'.'+pbkdf2Sync(process.env.CRM_PASSWORD,s,100000,32,'sha256').toString('hex'))"
+```
+
+Guardá el verificador como secreto del servidor. Al reemplazarlo, se invalidan las sesiones previas. Desplegá la versión con la pantalla de ingreso y aplicá las migraciones antes de habilitar el acceso por enlace. El permiso público de Sites permite llegar al formulario. El servidor comprueba la sesión para leer y escribir datos.
+
+La raíz abre el CRM. Después de ingresar, `/prototipo` permite practicar con ejemplos, `/guia` muestra estas instrucciones y `/proyecto.zip` descarga el código.
 
 El logo y la fotografía de plantillas proceden del sitio de O&P Plantillas Biodinámicas. https://www.plantillasoyp.com/

@@ -1,5 +1,5 @@
-// Sites autentica al titular antes de ejecutar este módulo.
 import { api } from "./http.js";
+import { guardAccess } from "./acceso.js";
 import { assets } from "./assets.generated.js";
 
 function d1Store(binding) {
@@ -14,20 +14,19 @@ function d1Store(binding) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    if (!request.headers.get("oai-authenticated-user-id"))
-      return new Response("Ingresá con la cuenta titular del consultorio.", {
-        status: 401,
-        headers: { "Cache-Control": "no-store" },
-      });
-    if (url.pathname.startsWith("/api/")) return api(request, d1Store(env.DB));
+    const db = d1Store(env.DB);
+    const gate = await guardAccess(request, db, env.CRM_PASSWORD_HASH);
+    if (gate) return gate;
+    if (url.pathname.startsWith("/api/")) return api(request, db);
     const item = Object.hasOwn(assets, url.pathname) && assets[url.pathname];
     if (!item || request.method !== "GET")
       return new Response("Página no encontrada.", { status: 404 });
     const headers = {
       "Content-Type": item.type,
-      "Cache-Control": "private, no-cache",
+      "Cache-Control": "private, no-store",
       "X-Content-Type-Options": "nosniff",
       "Referrer-Policy": "no-referrer",
+      "X-Robots-Tag": "noindex, nofollow",
     };
     if (item.filename)
       headers["Content-Disposition"] =

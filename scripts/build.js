@@ -98,6 +98,10 @@ try {
     ["/plantillas.webp", "plantillas.webp", "image/webp", true],
   ])
     add(path, type, await readFile("public/" + name), binary);
+  assets["/"].data = assets["/"].data.replace(
+    "</main>",
+    '</main><footer class="wrap account-footer"><form action="/salir" method="post"><button class="btn subtle" type="submit">Cerrar sesión</button></form></footer>',
+  );
   add("/prototipo", "text/html; charset=utf-8", await readFile(demoFile));
   add(
     "/proyecto.zip",
@@ -116,6 +120,8 @@ try {
     (await moduleText("service.js")) +
     "\n" +
     (await moduleText("http.js")) +
+    "\n" +
+    (await moduleText("acceso.js")) +
     "\nconst assets=" +
     JSON.stringify(assets) +
     ";\n" +

@@ -10,14 +10,12 @@ export function openDb(file) {
   );
   db.exec("BEGIN IMMEDIATE");
   try {
-    if (!db.prepare("PRAGMA user_version").get().user_version) {
-      db.exec(
-        readFileSync(
-          new URL("../drizzle/0000_consultorio.sql", import.meta.url),
-          "utf8",
-        ),
-      );
-      db.exec("PRAGMA user_version=1");
+    const version = db.prepare("PRAGMA user_version").get().user_version;
+    const migrations = ["0000_consultorio.sql", "0001_acceso.sql"];
+    for (let index = version; index < migrations.length; index++) {
+      const path = new URL("../drizzle/" + migrations[index], import.meta.url);
+      db.exec(readFileSync(path, "utf8"));
+      db.exec("PRAGMA user_version=" + (index + 1));
     }
     db.exec("COMMIT");
   } catch (e) {

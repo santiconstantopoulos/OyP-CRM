@@ -901,3 +901,36 @@ summary {
     margin-top: 10px;
   }
 }
+
+.login-body {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+}
+.login-card {
+  width: min(100%, 400px);
+  padding: 30px 24px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: var(--rad);
+}
+.login-card img {
+  width: 115px;
+  display: block;
+  margin-bottom: 24px;
+}
+.login-card h1 {
+  font-size: 1.9rem;
+}
+.login-card .form {
+  padding: 0;
+  gap: 10px;
+  margin-top: 24px;
+}
+.login-card .btn {
+  margin-top: 6px;
+}
+.account-footer {
+  margin-bottom: 20px;
+}

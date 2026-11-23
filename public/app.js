@@ -316,8 +316,11 @@ async function api(path, body) {
   } catch {
     throw Error("No pudimos conectar con el consultorio. Volvé a intentar.");
   }
-  if (!response.ok)
-    throw Error(data.error || "No se pudo guardar. Volvé a intentar.");
+  if (!response.ok) {
+    const error = Error(data.error || "No se pudo guardar. Volvé a intentar.");
+    error.needsLogin = response.status === 401 && data.ingresar === "/ingresar";
+    throw error;
+  }
   return data;
 }
 async function render() {
@@ -376,6 +379,7 @@ async function render() {
     main.innerHTML =
       '<p class="error">' +
       esc(err.message) +
+      (err.needsLogin ? ' <a href="/ingresar">Volver a ingresar</a>' : "") +
       '</p><button class="btn space" id="retry">Reintentar</button>';
     document.getElementById("retry").onclick = render;
     main.setAttribute("aria-busy", "false");
@@ -494,6 +498,14 @@ function bindSubmit(form, make, message) {
       else location.hash = target;
     } catch (err) {
       error.textContent = err.message;
+      if (err.needsLogin) {
+        const link = document.createElement("a");
+        link.href = "/ingresar";
+        link.target = "_blank";
+        link.rel = "noopener";
+        link.textContent = "Ingresar en otra pestaña y reintentar";
+        error.append(" ", link);
+      }
     } finally {
       pending = false;
       button.disabled = false;
