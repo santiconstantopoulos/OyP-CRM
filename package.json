@@ -1,0 +1,17 @@
+{
+  "name": "oyp-consultorio",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env src/server.js",
+    "dev": "node src/server.js --demo",
+    "db:init": "node --env-file-if-exists=.env scripts/init.js",
+    "demo": "node src/server.js --demo",
+    "test": "node --test tests/*.test.js",
+    "build": "node scripts/build.js"
+  }
+}

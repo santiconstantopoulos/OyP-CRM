@@ -1,0 +1,9 @@
+data/
+.env
+.env.*
+!.env.example
+.node_modules/
+node_modules/
+.sites-runtime/
+dist/
+*.tgz
